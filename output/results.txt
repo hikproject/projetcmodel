@@ -1,0 +1,41 @@
+======================================================================
+  HASIL EVALUASI - DFT + LightGBM vs SVM
+  Dataset: /home/admin/Projects/tesis/Photos-Videos-Manipulations-Dataset-main/datasets/train_photos.pkl
+  Folds:   5
+======================================================================
+
+   Model Accuracy (mean+/-std) Precision (mean) Recall (mean) F1-Score (mean) Train Time (s, mean)
+LightGBM     0.9943 +/- 0.0008           0.9947        0.9939          0.9943                 0.94
+     SVM     0.9946 +/- 0.0012           0.9931        0.9961          0.9946                11.48
+
+--- Confusion Matrix ---
+
+LightGBM:
+             Pred Fake  Pred Real
+Actual Fake      20186        108
+Actual Real        123      20171
+
+SVM:
+             Pred Fake  Pred Real
+Actual Fake      20153        141
+Actual Real         80      20214
+
+--- Classification Report (LightGBM) ---
+              precision    recall  f1-score   support
+
+           0     0.9939    0.9947    0.9943     20294
+           1     0.9947    0.9939    0.9943     20294
+
+    accuracy                         0.9943     40588
+   macro avg     0.9943    0.9943    0.9943     40588
+weighted avg     0.9943    0.9943    0.9943     40588
+
+--- Classification Report (SVM) ---
+              precision    recall  f1-score   support
+
+           0     0.9960    0.9931    0.9945     20294
+           1     0.9931    0.9961    0.9946     20294
+
+    accuracy                         0.9946     40588
+   macro avg     0.9946    0.9946    0.9946     40588
+weighted avg     0.9946    0.9946    0.9946     40588

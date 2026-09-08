@@ -1,0 +1,27 @@
+# ============================================================
+#  Daftar dependensi proyek - Tesis S2
+#  "Optimasi Deteksi Manipulasi Citra Multimedia dengan
+#   DFT + LightGBM untuk Forensik Digital"
+#  (Pengembangan dari Ferreira et al., Journal of Imaging, 2021)
+#
+#  Target: Python 3.14 (Arch/Omarchy Linux)
+#  Instalasi:  pip install -r requirements.txt
+# ============================================================
+
+# --- Kebutuhan inti numerik & data ---
+numpy
+scipy
+pandas
+
+# --- Machine Learning ---
+scikit-learn
+lightgbm
+
+# --- Ekstraksi fitur DFT (citra) ---
+# Catatan: 'radialProfile' TIDAK tersedia di PyPI.
+# Modul radialProfile.py di-sertakan secara lokal di folder scripts/.
+opencv-python-headless
+
+# --- Visualisasi hasil ---
+matplotlib
+seaborn
