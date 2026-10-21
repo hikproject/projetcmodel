@@ -1,6 +1,6 @@
 # ProjetCModel — Deteksi Manipulasi Citra dengan DFT + LightGBM
 
-Tesis S2 Magister Teknik Informatika — *Digital Forensics & Machine Learning*.
+Jurnal S2 Magister Teknik Informatika — *Digital Forensics & Machine Learning*.
 
 > **Judul:** Optimasi Deteksi Manipulasi Citra Multimedia Menggunakan Kombinasi
 > Discrete Fourier Transform (DFT) dan Algoritma Gradient Boosting (LightGBM)
@@ -19,7 +19,6 @@ Kita buat virtual environment (`venv`) lalu instal dependensi dari `requirements
 
 ```bash
 # Masuk ke folder proyek
-cd /home/admin/Projects/tesis/projetcmodel
 
 # 1. Buat virtual environment
 python3 -m venv .venv

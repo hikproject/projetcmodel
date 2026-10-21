@@ -217,18 +217,23 @@ def main():
 
     # --- 3. Inisialisasi model ---
     #    LightGBM: Gradient Boosting (target penelitian).
-    #    n_jobs=-1 memakai semua core (i3-1215U: 8 thread).
+    #    Parameter di bawah dibuat lebih konservatif agar model lebih stabil
+    #    saat diuji pada data real-world (mengurangi overfit).
     lgb_model = lgb.LGBMClassifier(
-        n_estimators=200,
-        learning_rate=0.05,
-        num_leaves=31,
-        max_depth=-1,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        n_jobs=-1,
-        random_state=args.random_state,
-        verbose=-1,
-    )
+    n_estimators=300,        # Ditambah agar learning_rate 0.03 bisa konvergen sempurna
+    learning_rate=0.03,
+    num_leaves=31,           # Nilai default ideal untuk kompleksitas sedang
+    max_depth=-1,            # Biarkan num_leaves yang mengontrol kedalaman
+    min_data_in_leaf=20,     # Sedikit menurunkan ambang batas agar lebih responsif
+    feature_fraction=0.8,
+    subsample=0.8,
+    subsample_freq=1,        # WAJIB diisi agar subsample/bagging aktif
+    reg_alpha=0.1,
+    reg_lambda=1.0,
+    n_jobs=-1,
+    random_state=args.random_state,
+    verbose=-1,
+)
 
     #    SVM baseline: parameter PERSIS seperti yang dipakai penulis
     #    (Ferreira et al., 2021) agar perbandingan fair.

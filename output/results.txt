@@ -1,41 +1,41 @@
 ======================================================================
   HASIL EVALUASI - DFT + LightGBM vs SVM
-  Dataset: /home/admin/Projects/tesis/Photos-Videos-Manipulations-Dataset-main/datasets/train_photos.pkl
+  Dataset: datasets/train_all.pkl
   Folds:   5
 ======================================================================
 
    Model Accuracy (mean+/-std) Precision (mean) Recall (mean) F1-Score (mean) Train Time (s, mean)
-LightGBM     0.9943 +/- 0.0008           0.9947        0.9939          0.9943                 0.94
-     SVM     0.9946 +/- 0.0012           0.9931        0.9961          0.9946                11.48
+LightGBM     0.8861 +/- 0.0030           0.9863        0.7832          0.8730                 0.41
+     SVM     0.8800 +/- 0.0028           0.9969        0.7624          0.8640               250.58
 
 --- Confusion Matrix ---
 
 LightGBM:
              Pred Fake  Pred Real
-Actual Fake      20186        108
-Actual Real        123      20171
+Actual Fake      26206        289
+Actual Real       5745      20750
 
 SVM:
              Pred Fake  Pred Real
-Actual Fake      20153        141
-Actual Real         80      20214
+Actual Fake      26433         62
+Actual Real       6295      20200
 
 --- Classification Report (LightGBM) ---
               precision    recall  f1-score   support
 
-           0     0.9939    0.9947    0.9943     20294
-           1     0.9947    0.9939    0.9943     20294
+           0     0.8202    0.9891    0.8968     26495
+           1     0.9863    0.7832    0.8731     26495
 
-    accuracy                         0.9943     40588
-   macro avg     0.9943    0.9943    0.9943     40588
-weighted avg     0.9943    0.9943    0.9943     40588
+    accuracy                         0.8861     52990
+   macro avg     0.9032    0.8861    0.8849     52990
+weighted avg     0.9032    0.8861    0.8849     52990
 
 --- Classification Report (SVM) ---
               precision    recall  f1-score   support
 
-           0     0.9960    0.9931    0.9945     20294
-           1     0.9931    0.9961    0.9946     20294
+           0     0.8077    0.9977    0.8927     26495
+           1     0.9969    0.7624    0.8640     26495
 
-    accuracy                         0.9946     40588
-   macro avg     0.9946    0.9946    0.9946     40588
-weighted avg     0.9946    0.9946    0.9946     40588
+    accuracy                         0.8800     52990
+   macro avg     0.9023    0.8800    0.8784     52990
+weighted avg     0.9023    0.8800    0.8784     52990
