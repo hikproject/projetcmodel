@@ -2,7 +2,7 @@
 
 Setiap hari jutaan foto dan video beredar di media sosial, dan sebagian di antaranya adalah hasil manipulasi: foto uji rudal yang diedit, wajah yang ditukar, berita palsu yang memakai gambar "bukti". Mata manusia sudah tidak lagi bisa diandalkan untuk membedakannya — mata yang awas pun bisa tertipu oleh manipulasi yang rapi.
 
-Di dunia penyelidikan digital, kebutuhan akan alat yang bisa memilah otomatis antara file asli dan file palsu menjadi sangat nyata. Postingan ini membahas bagaimana saya **merekonstruksi kode dari sebuah jurnal ilmiah** — Ferreira, Antunes, & Correia (2021), *Exposing Manipulated Photos and Videos in Digital Forensics Analysis*, Journal of Imaging 7(7), 102 — yang menawarkan resep sederhana namun memukau: **DFT + SVM**.
+Di dunia penyelidikan digital, kebutuhan akan alat yang bisa memilah otomatis antara file asli dan file palsu menjadi sangat nyata. Postingan ini membahas bagaimana saya **merekonstruksi kode dari sebuah jurnal ilmiah** — [Ferreira, Antunes, & Correia (2021), *Exposing Manipulated Photos and Videos in Digital Forensics Analysis*, Journal of Imaging 7(7), 102](https://doi.org/10.3390/jimaging7070102) — yang menawarkan resep sederhana namun memukau: **DFT + SVM**. Seluruh kode hasil rekonstruksi — skrip ekstraksi fitur, training, prediksi, model terlatih, sampai dua plot hasil — tersedia di [repo projetcmodel](https://github.com/hikproject/projetcmodel).
 
 Alur pembahasan disusun berjenjang, dari pengenalan umum menuju detail teknis dan hasil eksperimen.
 
@@ -28,7 +28,7 @@ Citra yang dimanipulasi (terutama hasil splicing/copy-move) memiliki pola energi
 
 ### 2.1. Dari spektrum 2D menjadi 50 angka
 
-Pipeline ekstraksi fitur (persis seperti jurnal, diimplementasikan di `scripts/feature_extraction.py`) berjalan sebagai berikut:
+Pipeline ekstraksi fitur (persis seperti jurnal, diimplementasikan di [`scripts/feature_extraction.py`](https://github.com/hikproject/projetcmodel/blob/main/scripts/feature_extraction.py)) berjalan sebagai berikut:
 
 1. **Baca citra grayscale** dengan OpenCV (`cv2.imread(img, 0)`).
 2. **DFT 2D**: `np.fft.fft2(img)` lalu `np.fft.fftshift(f)` — komponen DC (frekuensi 0) dipindahkan ke tengah agar spektrum simetris radial.
@@ -63,9 +63,9 @@ SVC(
 
 ## Tingkat 4 — Rekayasa kode: pipeline eksperimen
 
-Jurnal menjalankan evaluasi dengan **5-fold cross-validation**. Implementasi ada di `scripts/train_benchmark.py` dengan alur:
+Jurnal menjalankan evaluasi dengan **5-fold cross-validation**. Implementasi ada di [`scripts/train_benchmark.py`](https://github.com/hikproject/projetcmodel/blob/main/scripts/train_benchmark.py) dengan alur:
 
-1. **Load dataset** — file `.pkl` penulis berisi dictionary `data["data"]` (matriks fitur 50 DFT) dan `data["label"]` (0 = fake, 1 = real).
+1. **Load dataset** — file `.pkl` dari [dataset resmi penulis](https://github.com/saraferreirascf/Photos-Videos-Manipulations-Dataset) berisi dictionary `data["data"]` (matriks fitur 50 DFT) dan `data["label"]` (0 = fake, 1 = real).
 2. **Stratified K-Fold (k=5)** — proporsi kelas tetap seimbang di tiap fold, dengan `shuffle=True` dan `random_state=42` agar hasil dapat direproduksi.
 3. **Latih SVM** dengan parameter persis penulis.
 4. **Hitung metrik** per fold: accuracy, precision, recall, F1, dan confusion matrix; waktu pelatihan diukur terpisah.
@@ -118,11 +118,11 @@ Jurnal juga membandingkan DFT-SVM dengan CNN dan menemukan hal menarik untuk pra
 | DFT + SVM | 00:00:51 | 00:02:00 |
 | CNN | 06:36:00 | 02:40:00 |
 
-CNN memang sedikit lebih akurat, tetapi biaya komputasinya jauh lebih besar — sehingga DFT-SVM justru lebih layak disematkan sebagai modul alat forensik sehari-hari (jurnal mengintegrasikannya ke aplikasi open-source **Autopsy**).
+CNN memang sedikit lebih akurat, tetapi biaya komputasinya jauh lebih besar — sehingga DFT-SVM justru lebih layak disematkan sebagai modul alat forensik sehari-hari (jurnal mengintegrasikannya ke aplikasi open-source [**Autopsy**](https://www.autopsy.com/)).
 
 ## Tingkat 6 — Uji nyata pada satu citra
 
-Teori baru terasa lengkap ketika diuji pada file sungguhan. Dengan `scripts/predict_image_svm.py`, satu citra mentah dibaca → 50 fitur DFT diekstrak (pipeline identik dengan saat training) → diprediksi:
+Teori baru terasa lengkap ketika diuji pada file sungguhan. Dengan [`scripts/predict_image_svm.py`](https://github.com/hikproject/projetcmodel/blob/main/scripts/predict_image_svm.py), satu citra mentah dibaca → 50 fitur DFT diekstrak (pipeline identik dengan saat training) → diprediksi:
 
 ```bash
 python scripts/predict_image_svm.py data/real.jpeg
@@ -164,7 +164,7 @@ Langkah lanjutan — menambahkan classifier gradient boosting agar lebih cepat d
 
 ## Referensi
 
-1. Ferreira, S.; Antunes, M.; Correia, M.E. *Exposing Manipulated Photos and Videos in Digital Forensics Analysis*. **J. Imaging 2021, 7, 102**. https://doi.org/10.3390/jimaging7070102
-2. Durall, R.; Keuper, M.; Pfreundt, F.J.; Keuper, J. *Unmasking deepfakes with simple features*. arXiv:1911.00686. (dasar metode DFT-SVM)
-3. Dataset & kode penulis: https://github.com/saraferreirascf/Photo-and-video-manipulations-detector
-4. Kode reproduksi ini: `scripts/feature_extraction.py`, `scripts/train_benchmark.py`, `scripts/predict_image_svm.py`
+1. Ferreira, S.; Antunes, M.; Correia, M.E. *Exposing Manipulated Photos and Videos in Digital Forensics Analysis*. **J. Imaging 2021, 7, 102** — [https://doi.org/10.3390/jimaging7070102](https://doi.org/10.3390/jimaging7070102)
+2. Durall, R.; Keuper, M.; Pfreundt, F.J.; Keuper, J. *Unmasking deepfakes with simple features* — [arXiv:1911.00686](https://arxiv.org/abs/1911.00686) (dasar metode DFT-SVM)
+3. [Kode asli & dataset penulis](https://github.com/saraferreirascf/Photo-and-video-manipulations-detector) (integrasi Autopsy, termasuk [dataset `.pkl`](https://github.com/saraferreirascf/Photos-Videos-Manipulations-Dataset))
+4. [Repositori reproduksi ini](https://github.com/hikproject/projetcmodel) — `scripts/feature_extraction.py`, `scripts/train_benchmark.py`, `scripts/predict_image_svm.py`

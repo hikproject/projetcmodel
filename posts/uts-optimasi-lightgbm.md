@@ -1,6 +1,6 @@
 # Dari SVM ke LightGBM: Mengoptimalkan Deteksi Manipulasi Citra dengan Gradient Boosting
 
-Postingan tugas sebelumnya membuktikan bahwa resep jurnal Ferreira et al. (2021) — **50 fitur DFT + SVM** — bisa direproduksi dari nol: akurasi **88,00%**, F1 **89,27%** pada 52.990 sampel, selisih tipis dari pelaporan jurnal (87,92% / 89,10%).
+[Postingan tugas sebelumnya](https://medium.com/@hidayathikmat8/mereproduksi-jurnal-forensik-digital-deteksi-foto-video-palsu-dengan-dft-svm-699d765e3406) membuktikan bahwa resep [jurnal Ferreira et al. (2021)](https://doi.org/10.3390/jimaging7070102) — **50 fitur DFT + SVM** — bisa direproduksi dari nol: akurasi **88,00%**, F1 **89,27%** pada 52.990 sampel, selisih tipis dari pelaporan jurnal (87,92% / 89,10%). Kode eksperimen yang sama, kini dengan dua model berjalan berdampingan, ada di [repo projetcmodel](https://github.com/hikproject/projetcmodel).
 
 Namun satu angka mengganjal: **SVM butuh rata-rata 250,58 detik untuk melatih satu fold**. Kalau dataset tumbuh, atau alat forensik harus dilatih ulang berkali-kali, waktu itu menumpuk. Pertanyaan postingan ini:
 
@@ -37,7 +37,7 @@ Keduanya membuat training lebih cepat tanpa harus memperbesar data.
 
 ## Tingkat 3 — Konfigurasi yang dipakai di kode
 
-Implementasi ada di `scripts/train_benchmark.py:222`. Parameter dibuat **konservatif** agar model tidak overfit dan tetap stabil pada data di luar dataset:
+Implementasi ada di [`scripts/train_benchmark.py` baris 222](https://github.com/hikproject/projetcmodel/blob/main/scripts/train_benchmark.py#L222). Parameter dibuat **konservatif** agar model tidak overfit dan tetap stabil pada data di luar dataset:
 
 ```python
 lgb.LGBMClassifier(
@@ -64,12 +64,12 @@ Tiga keputusan desain yang patut dicatat untuk praktisi:
 
 ## Tingkat 4 — Protokol eksperimen: perbandingan yang adil
 
-Agar hasil benar-benar bisa dibandingkan, **semua hal kecuali nama model dijaga identik** dengan eksperimen tugas:
+Agar hasil benar-benar bisa dibandingkan, **semua hal kecuali nama model dijaga identik** dengan [eksperimen tugas](https://medium.com/@hidayathikmat8/mereproduksi-jurnal-forensik-digital-deteksi-foto-video-palsu-dengan-dft-svm-699d765e3406):
 
 | Komponen | Pengaturan |
 |---|---|
 | Fitur | 50 fitur DFT (azimuthal average), pipeline `feature_extraction.py` identik |
-| Dataset | `datasets/train_all.pkl` — 52.990 sampel (26.495 fake / 26.495 real) |
+| Dataset | [`datasets/train_all.pkl`](https://github.com/saraferreirascf/Photos-Videos-Manipulations-Dataset) — 52.990 sampel (26.495 fake / 26.495 real) |
 | Validasi | 5-Fold **Stratified** Cross-Validation, `shuffle=True`, `random_state=42` |
 | Baseline | SVM persis penulis: `C=6.37`, `kernel='rbf'`, `gamma=0.86` |
 | Kandidat | LightGBM dengan konfigurasi Tingkat 3 |
@@ -133,7 +133,7 @@ Kelas *real* memperoleh precision 98,63% — artinya ketika model menyatakan seb
 
 ## Tingkat 6 — Uji nyata pada satu citra
 
-Sama seperti postingan tugas, kita uji dengan `scripts/predict_image.py` (model `models/lightgbm_model.txt`):
+Sama seperti [postingan tugas](https://medium.com/@hidayathikmat8/mereproduksi-jurnal-forensik-digital-deteksi-foto-video-palsu-dengan-dft-svm-699d765e3406), kita uji dengan [`scripts/predict_image.py`](https://github.com/hikproject/projetcmodel/blob/main/scripts/predict_image.py) (model `models/lightgbm_model.txt`):
 
 ```bash
 python scripts/predict_image.py data/real.jpeg
@@ -164,8 +164,8 @@ Kedua prediksi **benar**, tetapi perhatikan `fake.jpeg`: keyakinannya tipis (52,
 
 ## Referensi
 
-1. Ferreira, S.; Antunes, M.; Correia, M.E. *Exposing Manipulated Photos and Videos in Digital Forensics Analysis*. **J. Imaging 2021, 7, 102**. https://doi.org/10.3390/jimaging7070102
-2. Ke, G. et al. *LightGBM: A Highly Efficient Gradient Boosting Decision Tree*. NeurIPS 2017.
-3. Dataset & baseline penulis: https://github.com/saraferreirascf/Photo-and-video-manipulations-detector
-4. Kode eksperimen: `scripts/train_benchmark.py` (training & benchmark), `scripts/predict_image.py` (prediksi LightGBM), laporan lengkap di `output/results.txt`
-5. Postingan terkait: *Mereproduksi Jurnal Forensik Digital: Deteksi Foto & Video Palsu dengan DFT + SVM* (`posts/tugas-reproduksi-dft-svm.md`)
+1. Ferreira, S.; Antunes, M.; Correia, M.E. *Exposing Manipulated Photos and Videos in Digital Forensics Analysis*. **J. Imaging 2021, 7, 102** — [https://doi.org/10.3390/jimaging7070102](https://doi.org/10.3390/jimaging7070102)
+2. Ke, G. et al. *LightGBM: A Highly Efficient Gradient Boosting Decision Tree*. **NeurIPS 2017**.
+3. [Kode asli & baseline penulis](https://github.com/saraferreirascf/Photo-and-video-manipulations-detector), [dataset `.pkl`](https://github.com/saraferreirascf/Photos-Videos-Manipulations-Dataset)
+4. [Repositori eksperimen ini](https://github.com/hikproject/projetcmodel) — `scripts/train_benchmark.py` (training & benchmark), `scripts/predict_image.py` (prediksi LightGBM), laporan lengkap di `output/results.txt`
+5. Postingan terkait: [*Mereproduksi Jurnal Forensik Digital: Deteksi Foto & Video Palsu dengan DFT + SVM*](https://medium.com/@hidayathikmat8/mereproduksi-jurnal-forensik-digital-deteksi-foto-video-palsu-dengan-dft-svm-699d765e3406)
